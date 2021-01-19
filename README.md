@@ -1,2 +1,2 @@
 # moodSwing
-Adam was here
+Capstone project for analzing users HR to detect enotions
