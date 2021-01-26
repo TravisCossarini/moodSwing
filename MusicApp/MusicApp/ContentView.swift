@@ -21,14 +21,49 @@ struct Song : Hashable {
     var time : String
     var file : String
 }
+struct ContentView: View {
+    @ObservedObject var data : OurData
+    let disciplines = ["Playlist"]
+    var body: some View {
+        NavigationView {
+            VStack {
+                NavigationLink(destination: MusicView(data: data)){
+                    Text("View Playlist")
+                    }
+                // fill these in when we have more buttons/ views that we need
+                NavigationLink(destination: MoodChoice()){
+                    Text("Pick My Mood")
+                }
+                 NavigationLink(destination: HeartRate()){
+                    Text("View My Heart Rate")
+                }
+                
+            }.navigationTitle("MoodSwing!")
+        }.navigationBarTitleDisplayMode(.inline)
+    }
+}
 
-struct ContentView : View {
+// Where the user would select mood choice!
+struct MoodChoice : View {
+    var body: some View {
+        Text("Possible Moods")
+    }
+}
+
+// Where the heart rate stuff would go
+struct HeartRate : View {
+    var body: some View {
+        Text("Current Heart Rate")
+    }
+}
+
+struct MusicView : View {
     @ObservedObject var data : OurData
     @State private var currentAlbum : Album?
    
   //  var currentAlbum : Album?
     var body: some View {
-        NavigationView{
+       // NavigationView{
             ScrollView {
                 ScrollView(.horizontal, showsIndicators: false, content: {
                     LazyHStack {
@@ -53,8 +88,7 @@ struct ContentView : View {
                         }
             
                     }
-            }.navigationTitle("Mood PlayLists")
-        }
+            }.navigationTitle("Playlists")
     }
 }
 
