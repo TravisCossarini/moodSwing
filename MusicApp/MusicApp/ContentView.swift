@@ -21,32 +21,68 @@ struct Song : Hashable {
     var time : String
     var file : String
 }
+
 struct ContentView: View {
     @ObservedObject var data : OurData
+    @State var Mood = 0
     let disciplines = ["Playlist"]
     var body: some View {
+        Text("MoodSwing").font(.title).foregroundColor(.purple).background(RoundedRectangle(cornerRadius: 8).fill(Color.white))
         NavigationView {
-            VStack {
+            VStack(alignment: .center) {
+                Image("Logo").resizable().aspectRatio(contentMode: .fill).frame(width: 250.0, height: 300.0, alignment: .center).offset(y: 0.1).padding(.bottom, 5)
                 NavigationLink(destination: MusicView(data: data)){
-                    Text("View Playlist")
-                    }
+                    Text("View Playlist").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.purple))
+                }.buttonStyle(PlainButtonStyle()).padding(10)
                 // fill these in when we have more buttons/ views that we need
-                NavigationLink(destination: MoodChoice()){
-                    Text("Pick My Mood")
-                }
-                 NavigationLink(destination: HeartRate()){
-                    Text("View My Heart Rate")
-                }
+                NavigationLink(destination: MoodChoice(Mood: Mood)){
+                    Text("Pick My Mood").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.purple))
+                }.buttonStyle(PlainButtonStyle()).padding(10)
+                NavigationLink(destination: HeartRate()){
+                    Text("View My Heart Rate").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.purple))
+                }.buttonStyle(PlainButtonStyle()).padding(10)
                 
-            }.navigationTitle("MoodSwing!")
-        }.navigationBarTitleDisplayMode(.inline)
+            }//.navigationTitle("Welcome!")
+        }
     }
 }
 
 // Where the user would select mood choice!
 struct MoodChoice : View {
+    // neutral is 0
+    @State var Mood = 0
+   
     var body: some View {
-        Text("Possible Moods")
+        Text("How do you want to feel?")
+        VStack{
+        Button {
+            // happy is 1
+            Mood = 1
+            print(Mood)
+           // print("Happy button is pressed")
+        } label : {
+            Text("Happy").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.yellow))
+                .padding(20)
+        }.buttonStyle(PlainButtonStyle())
+        
+        Button {
+            // relaxed is 2
+            Mood = 2
+            print(Mood)
+        } label : {
+            Text("Relaxed").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.blue))
+                .padding(20)
+        }.buttonStyle(PlainButtonStyle())
+        Button {
+            // happy is 1
+            Mood = 0
+            print(Mood)
+            // print("Happy button is pressed")
+        } label : {
+            Text("Neutral").font(.title).foregroundColor(.white).frame(height: 40).padding(.horizontal, 40).background(RoundedRectangle(cornerRadius: 8).fill(Color.green))
+                    .padding(20)
+        }.buttonStyle(PlainButtonStyle())
+        }
     }
 }
 
