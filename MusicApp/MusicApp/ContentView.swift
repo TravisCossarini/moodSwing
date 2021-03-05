@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreBluetooth
 import Firebase
 
 struct Album : Hashable {
@@ -86,10 +87,145 @@ struct MoodChoice : View {
     }
 }
 
+
+class HRMManager: NSObject, ObservableObject, CBCentralManagerDelegate {
+    var centralManager: CBCentralManager!
+    var heartRatePeripheral: CBPeripheral!
+    var count = 0
+    @Published var last10:[Int] = [0,0,0,0,0,0,0,0,0,0]
+    @Published var hr = "-"
+    
+    override init() {
+        super.init()
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        centralManager.delegate = self
+}
+    let heartRateServiceCBUUID = CBUUID(string: "0x180D")
+    let heartRateMeasurementCharacteristicCBUUID = CBUUID(string: "2A37")
+    let bodySensorLocationCharacteristicCBUUID = CBUUID(string: "2A38")
+    
+    
+}
+extension HRMManager {
+  func centralManagerDidUpdateState(_ central: CBCentralManager) {
+    switch central.state {
+      case .unknown:
+        print("central.state is .unknown")
+      case .resetting:
+        print("central.state is .resetting")
+      case .unsupported:
+        print("central.state is .unsupported")
+      case .unauthorized:
+        print("central.state is .unauthorized")
+      case .poweredOff:
+        print("central.state is .poweredOff")
+      case .poweredOn:
+        print("central.state is .poweredOn")
+        centralManager.scanForPeripherals(withServices: [heartRateServiceCBUUID])
+    }
+    
+  }
+  func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                      advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    print(peripheral)
+    hr = "scanning for HR"
+    heartRatePeripheral = peripheral
+    heartRatePeripheral.delegate = self
+    centralManager.stopScan()
+    centralManager.connect(heartRatePeripheral)
+  }
+  
+  func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    hr = "Connected to sensor!"
+    print("Connected!")
+    heartRatePeripheral.discoverServices([heartRateServiceCBUUID])
+    //heartRatePeripheral.discoverServices(nil)
+  }
+}
+
+extension HRMManager: CBPeripheralDelegate {
+  
+  func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    guard let services = peripheral.services else { return }
+    hr = "Scanning for data"
+    for service in services {
+      print(service)
+      peripheral.discoverCharacteristics(nil, for: service)
+    }
+  }
+  func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService,
+                  error: Error?) {
+    guard let characteristics = service.characteristics else { return }
+
+    for characteristic in characteristics {
+      print(characteristic)
+      if characteristic.properties.contains(.read) {
+        //print("\(characteristic.uuid): properties contains .read")
+      }
+      if characteristic.properties.contains(.notify) {
+        //print("\(characteristic.uuid): properties contains .notify")
+        peripheral.setNotifyValue(true, for: characteristic)
+      }
+
+    }
+  }
+  func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic,
+                  error: Error?) {
+    switch characteristic.uuid {
+      case bodySensorLocationCharacteristicCBUUID:
+        print(characteristic.value ?? "no value")
+      case heartRateMeasurementCharacteristicCBUUID:
+        let bpm = heartRate(from: characteristic)
+        hr = bpm
+        last10[count] = Int(bpm) ?? 0
+        count+=1
+        if count >= 10 {
+            count = 0
+        }
+            
+        //onHeartRateReceived(bpm)
+        //let data = Data(characteristic.value!)
+        //let arr = [UInt8](data)
+        //print(arr)
+      default:
+        print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+    }
+  }
+
+  private func heartRate(from characteristic: CBCharacteristic) -> String {
+    guard let characteristicData = characteristic.value else { return "Fail" }
+    let byteArray = [UInt8](characteristicData)
+    print(byteArray)
+    let firstBitValue = byteArray[0] & 0x01
+    if firstBitValue == 0 {
+      // Heart Rate Value Format is in the 2nd byte
+      return String(Int(byteArray[1]))
+    } else {
+      // Heart Rate Value Format is in the 2nd and 3rd bytes
+      return String((Int(byteArray[1]) << 8) + Int(byteArray[2]))
+    }
+  }
+
+    public func last10String()->String{
+        var printable = ""
+        for i in last10{
+            printable += String(i) + " "
+        }
+        return printable
+    }
+  }
+
+    
 // Where the heart rate stuff would go
 struct HeartRate : View {
+    @ObservedObject var HeartRate = HRMManager()
     var body: some View {
-        Text("Current Heart Rate")
+        VStack {
+            Text(HeartRate.last10String()).frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            Text(HeartRate.hr).frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        
     }
 }
 
