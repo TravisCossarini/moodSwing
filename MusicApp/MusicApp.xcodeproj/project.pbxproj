@@ -20,6 +20,7 @@
 		AD85B4D425B4940D004B8DBD /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD85B4D325B4940D004B8DBD /* PlayerView.swift */; };
 		AD85B4D925B4974D004B8DBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD85B4D825B4974D004B8DBD /* GoogleService-Info.plist */; };
 		AD85B4F725B49EFF004B8DBD /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD85B4F625B49EFF004B8DBD /* Data.swift */; };
+		AD8C576E2606596C00690534 /* MoodSwing_Final.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = AD8C576D2606596C00690534 /* MoodSwing_Final.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		AD85B4D325B4940D004B8DBD /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		AD85B4D825B4974D004B8DBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AD85B4F625B49EFF004B8DBD /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		AD8C576D2606596C00690534 /* MoodSwing_Final.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = MoodSwing_Final.mlmodel; sourceTree = "<group>"; };
 		B1B94B2FEF2AEE75987602B2 /* Pods-MusicApp-MusicAppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicApp-MusicAppUITests.release.xcconfig"; path = "Target Support Files/Pods-MusicApp-MusicAppUITests/Pods-MusicApp-MusicAppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		C33DC0CFA0DBDB6ADD5D1A19 /* Pods_MusicApp_MusicAppUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicApp_MusicAppUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 		AD85B49F25B48BEB004B8DBD /* MusicApp */ = {
 			isa = PBXGroup;
 			children = (
+				AD8C576D2606596C00690534 /* MoodSwing_Final.mlmodel */,
 				AD85B4D825B4974D004B8DBD /* GoogleService-Info.plist */,
 				AD85B4A025B48BEB004B8DBD /* MusicAppApp.swift */,
 				AD85B4F625B49EFF004B8DBD /* Data.swift */,
@@ -425,6 +428,7 @@
 				AD85B4A325B48BEB004B8DBD /* ContentView.swift in Sources */,
 				AD85B4A125B48BEB004B8DBD /* MusicAppApp.swift in Sources */,
 				AD85B4D425B4940D004B8DBD /* PlayerView.swift in Sources */,
+				AD8C576E2606596C00690534 /* MoodSwing_Final.mlmodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
